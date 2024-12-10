@@ -1,0 +1,21 @@
+{
+	"geode": "4.0.1",
+	"gd": {
+		"win": "2.2074",
+		"android": "2.2074",
+		"mac": "2.2074",
+		"ios": "2.2074"
+	},
+    "resources": {
+        "spritesheets": {
+        	"RobotSprites": [
+        		"resources/robot/sheet/*.png"
+        	]
+        }
+    },
+	"id": "saritahhh.sonicrobotmod",
+	"name": "Sonic Robot",
+	"version": "v1.0.0",
+	"developer": "Saritahhh",
+	"description": "Mod that turns the robot gamemode into Sonic!"
+}
