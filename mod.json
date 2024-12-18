@@ -19,7 +19,7 @@
     		"name": "Game Sprite",
     		"description": "Chooses which sonic game sprites' the mod will use. classic1 is Sonic 1, classic2 is Sonic 2, etc!",
     		"default": "classic1_",
-    		"one-of": ["classic1_", "classic2_", "super2_", "classic3_", "super3_", "mania_", "advance_"]
+    		"one-of": ["classic1_", "classic2_", "super2_", "classic3_", "super3_", "mania_", "supermania_", "advance1_", "advance2_", "blaze1_", "blaze2_", "classic1enhanced_", "super1_"]
     	}
     },
 	"id": "saritahhh.sonicrobotmod",

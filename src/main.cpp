@@ -19,6 +19,7 @@ $execute {
 class $modify(PlayerObject) {
     struct Fields {
         float m_animationTimer = 0.f;
+        float m_bumpTimer = 0.f; // Timer for bump animation
         int m_maxFrames = 4; // Default max frames
         int m_currentFrame = 1; // Start from frame 1
         CCSprite* m_customSprite = nullptr;
@@ -31,7 +32,7 @@ class $modify(PlayerObject) {
         if (!PlayerObject::init(p0, p1, p2, p3, p4)) return false;
 
         // Adjust the maximum frames based on the selected game sprite
-        if (chosenGameSprite == "mania_" || chosenGameSprite == "advance_") {
+        if (chosenGameSprite == "mania_" || chosenGameSprite == "advance2_" || chosenGameSprite == "supermania_") {
             m_fields->m_maxFrames = 8; // Set max frames to 8 for mania
         } else {
             m_fields->m_maxFrames = 4; // Default to 4 frames otherwise
@@ -51,6 +52,21 @@ class $modify(PlayerObject) {
         }
 
         return true;
+    }
+
+    void bumpPlayer(float p0, int p1, bool p2, GameObject* p3) {
+        PlayerObject::bumpPlayer(p0, p1, p2, p3);
+
+        if (m_isRobot && m_fields->m_customSprite) {
+            m_fields->m_bumpTimer = 12.5f; 
+        }
+        
+    }
+
+    void playerDestroyed(bool p0) {
+        PlayerObject::playerDestroyed(p0);
+
+        m_robotBatchNode->setVisible(false);
     }
 
     void update(float dt) {
@@ -79,6 +95,16 @@ class $modify(PlayerObject) {
         // Show and update custom sprite
         m_fields->m_customSprite->setVisible(true);
 
+        // Handle bump animation
+        if (m_fields->m_bumpTimer > 0.f) {
+            // Play bumped animation
+            std::string frameName = fmt::format("{}sonicBumped_01.png"_spr, chosenGameSprite);
+            m_fields->m_customSprite->setDisplayFrame(CCSpriteFrameCache::sharedSpriteFrameCache()->spriteFrameByName(frameName.c_str()));
+            m_fields->m_bumpTimer -= 0.2f; // Decrease bump timer
+            m_fields->m_animationTimer = 0; // Reset animation timer to stop cycling frames
+            return; // Skip other animations while bumping
+        }
+
         // Check if the player is in platformer mode and has no X velocity
         if (m_isPlatformer && m_platformerXVelocity == 0 && m_isOnGround) {
             // Set the sprite to idle and stop the animation
@@ -101,7 +127,7 @@ class $modify(PlayerObject) {
             // Update animation frame
             m_fields->m_animationTimer += dt;
 
-            if (m_fields->m_animationTimer >= frameDuration) {
+            if (m_fields->m_animationTimer >= frameDuration && m_fields->m_bumpTimer <= 0.1f) {
                 m_fields->m_animationTimer -= frameDuration;
 
                 // Update current frame (cycle through 1-4)
